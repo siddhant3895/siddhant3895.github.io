@@ -1,0 +1,675 @@
+/* ==========================================================================
+   PLANE.SO CUSTOMIZABLE DESIGN SYSTEM & STYLESHEET (plane-style.css)
+   Inspired by https://plane.so/ ("Planes of Work" Visual Identity)
+   ==========================================================================
+
+   HOW TO CUSTOMIZE WHAT YOU WRITE & SHOW:
+   --------------------------------------------------------------------------
+   1. WRITE PLAIN HTML OR USE CLASSES (YOUR CHOICE):
+      - Classless Mode: Wrap your page in `<body class="plane-prose">` and write
+        standard tags (`<h1>`, `<p>`, `<a>`, `<blockquote>`, `<table>`, `<code>`,
+        `<button>`, `<input>`). Everything is automatically styled like plane.so.
+      - Component Mode: Mix and match modular layout blocks below (`.plane-nav`,
+        `.plane-hero`, `.plane-bento`, `.plane-card`, `.plane-steps`,
+        `.plane-board`, `.plane-footer`). Simply omit any block you don't need.
+
+   2. TOGGLE SECTIONS ON OR OFF WITHOUT DELETING HTML:
+      - Add `data-visible="false"` or `class="is-hidden"` to any section, card,
+        badge, or nav item you want to hide temporarily.
+      - Add `data-editable="true"` to any element you want to edit live in the
+        browser (combine with `contenteditable="true"` in HTML).
+
+   3. CHANGE COLORS, FONTS & SPACING IN ONE PLACE:
+      - Edit the `:root` variables in Section 1 below to change the accent color,
+        background canvas, font family, corner roundness, or container width.
+      - Add `data-theme="dark"` to `<html>` or `<body>` for Plane Dark Mode.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ==========================================================================
+   1. CUSTOMIZABLE DESIGN TOKENS (:root)
+   Measured from plane.so — edit any value below to customize your theme
+   ========================================================================== */
+:root {
+  /* --- Core Palette (Light Mode Default) --- */
+  --plane-canvas: #FFFFFF;              /* Main page background */
+  --plane-surface: #FAFAFA;             /* Cards, panels, and raised areas */
+  --plane-surface-hover: #F3F4F6;       /* Interactive surface hover tint */
+  --plane-surface-active: #EAEBEB;      /* Active/pressed surface tint */
+  --plane-text: #101828;                /* Primary headings and body copy */
+  --plane-text-muted: #676C6F;          /* Secondary copy, captions, labels */
+  --plane-text-subtle: #9CA3AF;         /* Placeholders and disabled text */
+  --plane-accent: #006399;              /* Primary brand accent (links, CTAs, focus) */
+  --plane-accent-hover: #004E7A;        /* Primary CTA hover state */
+  --plane-accent-soft: rgba(0, 99, 153, 0.08);   /* Subtle badge/highlight fill */
+  --plane-accent-border: rgba(0, 99, 153, 0.24); /* Subtle accent outline */
+  --plane-border: #EAEBEB;              /* Hairline structural borders & dividers */
+  --plane-border-strong: #D1D5DB;       /* Emphasized input/card hover border */
+
+  /* --- Semantic Status Colors (for boards, badges & alerts) --- */
+  --plane-success: #16A34A;
+  --plane-success-soft: rgba(22, 163, 74, 0.10);
+  --plane-warning: #D97706;
+  --plane-warning-soft: rgba(217, 119, 6, 0.10);
+  --plane-danger: #DC2626;
+  --plane-danger-soft: rgba(220, 38, 38, 0.10);
+
+  /* --- Typography --- */
+  --plane-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --plane-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Plane uses weight 570 for display & headings, 400 for body */
+  --plane-weight-body: 400;
+  --plane-weight-medium: 500;
+  --plane-weight-heading: 570;
+
+  /* --- Type Scale (12px to 120px display) --- */
+  --plane-text-xs: 0.75rem;     /* 12px */
+  --plane-text-sm: 0.8125rem;   /* 13px */
+  --plane-text-md: 0.875rem;    /* 14px */
+  --plane-text-base: 1rem;      /* 16px - Default body */
+  --plane-text-lg: 1.125rem;    /* 18px */
+  --plane-text-xl: 1.25rem;     /* 20px - Section headings */
+  --plane-text-2xl: 1.5rem;     /* 24px */
+  --plane-text-3xl: 1.875rem;   /* 30px */
+  --plane-text-4xl: 2rem;       /* 32px */
+  --plane-text-display: clamp(2.75rem, 6.5vw, 5.25rem); /* Fluid display hero */
+  --plane-text-jumbo: clamp(3.25rem, 8vw, 7.5rem);      /* 120px max Plane hero */
+
+  /* --- Corner Radii (Never rounder than 16px for panels; pills for tags/buttons) --- */
+  --plane-radius-xs: 6px;
+  --plane-radius-sm: 8px;
+  --plane-radius-md: 10px;
+  --plane-radius-lg: 12px;
+  --plane-radius-xl: 16px;
+  --plane-radius-pill: 9999px;
+
+  /* --- 4px Base Spacing Grid --- */
+  --plane-space-1: 4px;
+  --plane-space-2: 8px;
+  --plane-space-3: 12px;
+  --plane-space-4: 16px;
+  --plane-space-5: 20px;
+  --plane-space-6: 24px;
+  --plane-space-8: 32px;
+  --plane-space-10: 40px;
+  --plane-space-12: 48px;
+  --plane-space-16: 64px;
+
+  /* --- Layout & Motion --- */
+  --plane-container-width: 1024px;
+  --plane-container-padding: 24px;
+  --plane-transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   2. OPTIONAL DARK MODE ([data-theme="dark"] or .theme-dark)
+   ========================================================================== */
+[data-theme="dark"],
+.theme-dark {
+  --plane-canvas: #0D0F12;
+  --plane-surface: #15181E;
+  --plane-surface-hover: #1C2028;
+  --plane-surface-active: #252A34;
+  --plane-text: #F3F4F6;
+  --plane-text-muted: #9CA3AF;
+  --plane-text-subtle: #6B7280;
+  --plane-accent: #38BDF8;
+  --plane-accent-hover: #7DD3FC;
+  --plane-accent-soft: rgba(56, 189, 248, 0.12);
+  --plane-accent-border: rgba(56, 189, 248, 0.28);
+  --plane-border: #22262F;
+  --plane-border-strong: #374151;
+}
+
+/* ==========================================================================
+   3. BASE RESET & ARCHITECTURAL FOUNDATION
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--plane-canvas);
+  color: var(--plane-text);
+  font-family: var(--plane-font-sans);
+  font-size: var(--plane-text-base);
+  font-weight: var(--plane-weight-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color var(--plane-transition), color var(--plane-transition);
+}
+
+/* Visible, accessible focus ring on all interactive elements */
+:focus-visible {
+  outline: 2px solid var(--plane-accent);
+  outline-offset: 2px;
+}
+
+/* Selection highlight */
+::selection {
+  background-color: var(--plane-accent-soft);
+  color: var(--plane-accent);
+}
+
+/* ==========================================================================
+   4. TYPOGRAPHY & CLASSLESS PROSE (.plane-prose or standard elements)
+   Write plain HTML tags and get Plane's exact typographic hierarchy
+   ========================================================================== */
+h1, h2, h3, h4, h5, h6,
+.plane-h1, .plane-h2, .plane-h3, .plane-display {
+  color: var(--plane-text);
+  font-family: var(--plane-font-sans);
+  font-weight: 600;
+  font-variation-settings: "wght" var(--plane-weight-heading);
+  letter-spacing: -0.025em;
+}
+
+/* Giant 120px-scale Display Title */
+.plane-jumbo {
+  font-size: var(--plane-text-jumbo);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+/* Hero Display Headline */
+h1, .plane-display {
+  font-size: var(--plane-text-display);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+/* Section Title */
+h2, .plane-h1 {
+  font-size: var(--plane-text-3xl);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+/* Card / Feature Heading (Plane signature 20px @ 570 weight) */
+h3, .plane-h2 {
+  font-size: var(--plane-text-xl);
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+}
+
+h4, .plane-h3 {
+  font-size: var(--plane-text-base);
+  line-height: 1.4;
+}
+
+p, .plane-body {
+  color: var(--plane-text);
+  font-size: var(--plane-text-base);
+  line-height: 1.5;
+}
+
+.plane-lead {
+  color: var(--plane-text-muted);
+  font-size: var(--plane-text-lg);
+  line-height: 1.6;
+  max-width: 64ch;
+}
+
+small, .plane-muted {
+  color: var(--plane-text-muted);
+  font-size: var(--plane-text-md);
+  line-height: 1.5;
+}
+
+.plane-eyebrow {
+  display: inline-block;
+  color: var(--plane-accent);
+  font-family: var(--plane-font-mono);
+  font-size: var(--plane-text-xs);
+  font-weight: var(--plane-weight-medium);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: var(--plane-space-3);
+}
+
+a {
+  color: var(--plane-accent);
+  text-decoration: none;
+  transition: color var(--plane-transition);
+}
+
+a:hover {
+  color: var(--plane-accent-hover);
+}
+
+/* Inline & Block Code */
+code, kbd, samp {
+  font-family: var(--plane-font-mono);
+  font-size: 0.875em;
+  background-color: var(--plane-surface);
+  border: 1px solid var(--plane-border);
+  border-radius: var(--plane-radius-xs);
+  padding: 2px 6px;
+}
+
+pre {
+  font-family: var(--plane-font-mono);
+  font-size: var(--plane-text-sm);
+  line-height: 1.6;
+  background-color: var(--plane-surface);
+  border: 1px solid var(--plane-border);
+  border-radius: var(--plane-radius-lg);
+  padding: var(--plane-space-5);
+  overflow-x: auto;
+}
+
+pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+/* Blockquote / Customer Story Pullquote */
+blockquote, .plane-quote {
+  background-color: var(--plane-surface);
+  border: 1px solid var(--plane-border);
+  border-left: 3px solid var(--plane-accent);
+  border-radius: var(--plane-radius-lg);
+  padding: var(--plane-space-6);
+  color: var(--plane-text);
+  font-size: var(--plane-text-lg);
+  line-height: 1.55;
+}
+
+blockquote footer, .plane-quote-author {
+  margin-top: var(--plane-space-3);
+  color: var(--plane-text-muted);
+  font-size: var(--plane-text-md);
+}
+
+/* Automatic vertical rhythm when using `.plane-prose` on a wrapper */
+.plane-prose > * + * {
+  margin-top: var(--plane-space-4);
+}
+.plane-prose > h2,
+.plane-prose > h3 {
+  margin-top: var(--plane-space-8);
+}
+
+/* ==========================================================================
+   5. LAYOUT CONTAINERS, SECTIONS & ARCHITECTURAL GRID
+   Plane uses a 1024px frame with crisp 1px #EAEBEB borders instead of shadows
+   ========================================================================== */
+.plane-container {
+  width: 100%;
+  max-width: var(--plane-container-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--plane-container-padding);
+  padding-right: var(--plane-container-padding);
+}
+
+/* Optional framed layout (vertical architectural rails on left & right) */
+.plane-frame {
+  max-width: var(--plane-container-width);
+  margin: 0 auto;
+  border-left: 1px solid var(--plane-border);
+  border-right: 1px solid var(--plane-border);
+}
+
+.plane-section {
+  padding-top: var(--plane-space-16);
+  padding-bottom: var(--plane-space-16);
+  border-bottom: 1px solid var(--plane-border);
+}
+
+.plane-section-compact {
+  padding-top: var(--plane-space-10);
+  padding-bottom: var(--plane-space-10);
+  border-bottom: 1px solid var(--plane-border);
+}
+
+.plane-divider {
+  border: 0;
+  border-top: 1px solid var(--plane-border);
+  margin: var(--plane-space-8) 0;
+}
+
+/* Responsive Grids */
+.plane-grid {
+  display: grid;
+  gap: var(--plane-space-5);
+}
+
+.plane-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--plane-space-5);
+}
+
+.plane-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--plane-space-5);
+}
+
+/* Seamless 1px Border Matrix (Bento Grid like plane.so feature blocks) */
+.plane-bento {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1px;
+  background-color: var(--plane-border);
+  border: 1px solid var(--plane-border);
+  border-radius: var(--plane-radius-xl);
+  overflow: hidden;
+}
+
+.plane-bento > * {
+  background-color: var(--plane-canvas);
+  padding: var(--plane-space-8);
+}
+
+/* ==========================================================================
+   6. NAVIGATION BAR (.plane-navbar)
+   ========================================================================== */
+.plane-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: color-mix(in srgb, var(--plane-canvas) 88%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--plane-border);
+}
+
+.plane-navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--plane-space-4);
+  min-height: 60px;
+  max-width: var(--plane-container-width);
+  margin: 0 auto;
+  padding: 0 var(--plane-container-padding);
+  flex-wrap: wrap;
+}
+
+.plane-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--plane-space-2);
+  color: var(--plane-text);
+  font-size: var(--plane-text-lg);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.plane-nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--plane-space-6);
+  list-style: none;
+  flex-wrap: wrap;
+}
+
+.plane-nav-link {
+  color: var(--plane-text-muted);
+  font-size: var(--plane-text-md);
+  font-weight: var(--plane-weight-medium);
+  transition: color var(--plane-transition);
+}
+
+.plane-nav-link:hover,
+.plane-nav-link.is-active {
+  color: var(--plane-text);
+}
+
+/* ==========================================================================
+   7. HERO SECTION (.plane-hero)
+   ========================================================================== */
+.plane-hero {
+  padding: var(--plane-space-16) 0;
+  border-bottom: 1px solid var(--plane-border);
+}
+
+.plane-hero-centered {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.plane-hero .plane-display,
+.plane-hero h1 {
+  margin-top: var(--plane-space-3);
+  margin-bottom: var(--plane-space-5);
+  max-width: 18ch;
+}
+
+.plane-cta-group {
+  display: flex;
+  align-items: center;
+  gap: var(--plane-space-3);
+  flex-wrap: wrap;
+  margin-top: var(--plane-space-6);
+}
+
+/* ==========================================================================
+   8. BUTTONS, LINKS & PILL BADGES
+   Single cohesive button & pill system — no drop shadows
+   ========================================================================== */
+button,
+.plane-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--plane-space-2);
+  font-family: var(--plane-font-sans);
+  font-size: var(--plane-text-md);
+  font-weight: var(--plane-weight-medium);
+  line-height: 1;
+  padding: 10px 16px;
+  border-radius: var(--plane-radius-sm);
+  border: 1px solid var(--plane-border);
+  background-color: var(--plane-surface);
+  color: var(--plane-text);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color var(--plane-transition),
+              border-color var(--plane-transition),
+              color var(--plane-transition);
+}
+
+button:hover,
+.plane-btn:hover {
+  background-color: var(--plane-surface-hover);
+  border-color: var(--plane-border-strong);
+  color: var(--plane-text);
+}
+
+/* Primary Accent Button (#006399) */
+.plane-btn-primary {
+  background-color: var(--plane-accent);
+  border-color: var(--plane-accent);
+  color: #FFFFFF;
+}
+
+.plane-btn-primary:hover {
+  background-color: var(--plane-accent-hover);
+  border-color: var(--plane-accent-hover);
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .plane-btn-primary,
+.theme-dark .plane-btn-primary {
+  color: #0D0F12;
+}
+
+/* Ghost / Arrow Action Link ("Talk to a human ->") */
+.plane-btn-ghost {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--plane-text);
+}
+
+.plane-btn-ghost:hover {
+  background-color: var(--plane-surface);
+  border-color: transparent;
+}
+
+/* Pill modifier for rounded CTA buttons */
+.plane-btn-pill {
+  border-radius: var(--plane-radius-pill);
+}
+
+/* Small Tag / Announcement Pill Badge */
+.plane-badge,
+.plane-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--plane-text-xs);
+  font-weight: var(--plane-weight-medium);
+  line-height: 1;
+  padding: 5px 10px;
+  border-radius: var(--plane-radius-pill);
+  background-color: var(--plane-surface);
+  border: 1px solid var(--plane-border);
+  color: var(--plane-text-muted);
+}
+
+.plane-badge-accent {
+  background-color: var(--plane-accent-soft);
+  border-color: var(--plane-accent-border);
+  color: var(--plane-accent);
+}
+
+/* ==========================================================================
+   9. CARDS & SURFACES (.plane-card)
+   Depth comes from #FAFAFA tonal contrast and #EAEBEB borders, never shadows
+   ========================================================================== */
+.plane-card {
+  background-color: var(--plane-surface);
+  border: 1px solid var(--plane-border);
+  border-radius: var(--plane-radius-xl);
+  padding: var(--plane-space-6);
+  transition: border-color var(--plane-transition),
+              background-color var(--plane-transition);
+}
+
+.plane-card-interactive:hover {
+  border-color: var(--plane-accent);
+  background-color: var(--plane-canvas);
+}
+
+.plane-card-title {
+  color: var(--plane-text);
+  font-size: var(--plane-text-xl);
+  font-weight: 600;
+  font-variation-settings: "wght" var(--plane-weight-heading);
+  margin-bottom: var(--plane-space-2);
+}
+
+.plane-card-text {
+  color: var(--plane-text-muted);
+  font-size: var(--plane-text-base);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   10. NUMBERED STEPS & TIMELINE BLOCKS (e.g. Plane Week 1 / Week 2 / Week 3)
+   ========================================================================== */
+.plane-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--plane-space-5);
+}
+
+.plane-step {
+  background-color: var(--plane-surface);
+  border: 1px solid var(--plane-border);
+  border-radius: var(--plane-radius-lg);
+  padding: var(--plane-space-6);
+}
+
+.plane-step-number {
+  display: inline-block;
+  font-family: var(--plane-font-mono);
+  font-size: var(--plane-text-xs);
+  font-weight: var(--plane-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--plane-accent);
+  background-color: var(--plane-accent-soft);
+  border: 1px solid var(--plane-accent-border);
+  border-radius: var(--plane-radius-xs);
+  padding: 3px 8px;
+  margin-bottom: var(--plane-space-3);
+}
+
+/* ==========================================================================
+   11. WORKSPACE UI MOCKUP: KANBAN / ISSUE LIST & TABLES
+   ========================================================================== */
+.plane-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--plane-space-4);
+}
+
+.plane-column {
+  background-color: var(--plane-surface);
+  border: 1px solid var(--plane-border);
+  border-radius: var(--plane-radius-lg);
+  padding: var(--plane-space-3);
+}
+
+.plane-column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--plane-text-sm);
+  font-weight: var(--plane-weight-medium);
+  color: var(--plane-text-muted);
+  padding: var(--plane-space-1) var(--plane-space-2) var(--plane-space-3);
+}
+
+.plane-issue {
+  background-color: var(--plane-canvas);
+  border: 1px solid var(--plane-border);
+  border-radius: var(--plane-radius-sm);
+  padding: var(--plane-space-3);
+  transition: border-color var(--plane-transition);
+}
+
+.plane-issue + .plane-issue {
+  margin-top: var(--plane-space-2);
+}
+
+.plane-issue:hover {
+  border-color: var(--plane-accent);
+}
+
+.plane-issue-id {
+  font-family: var(--plane-font-mono);
+  font-size: var(--plane-text-xs);
+  color: var(--plane-text-muted);
+}
+
+.plane-issue-title {
+  font-size: var(--plane-text-md);
+  font-weight: var(--plane-weight-medium);
+  color: var(--plane-text);
+  margin: var(--plane-space-1) 0 var(--plane-space-2);
+}
+
+/* Clean Data Tables */
+ta
