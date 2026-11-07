@@ -1,4 +1,4 @@
-# siddhanr3895.com
+# siddhant3895.com
 
 Build a polished personal portfolio website for a student developer, with a close visual inspiration from Plane.so's minimalist black-and-white UI language, but do not copy proprietary assets, exact page layouts, logos, or text. Reference: https://plane.so/. Prioritize the same restraint: black/white/soft gray palette, high-contrast typography, spacious editorial layouts, crisp grids, thin borders, subtle hover states, strong image-led sections, and quiet motion. Avoid gradients, neon, glassmorphism, generic SaaS cards, and clutter. This is a personal portfolio, not a project-management SaaS.
 
