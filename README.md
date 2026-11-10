@@ -25,3 +25,4 @@ I use this space to document projects, highlight contributions, and present the 
 ---
 
 *Built to showcase projects, contributions, and ongoing work.*
+-----------------------------------------------------------------
