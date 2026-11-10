@@ -36,7 +36,7 @@ jobs:
       - name: Build portfolio
         run: npm run build
 
-      - name: Configure GitHub Pages
+      - name: Configure GitHub Page    
         uses: actions/configure-pages@v4
 
       - name: Upload build output
