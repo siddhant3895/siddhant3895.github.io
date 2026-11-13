@@ -1,4 +1,4 @@
-# Siddhant — Personal Portfolio
+# Siddhant — Portfolio
 
 A personal portfolio showcasing my work across software engineering, open-source development, and data-driven applications.
 
@@ -25,4 +25,3 @@ I use this space to document projects, highlight contributions, and present the 
 ---
 
 *Built to showcase projects, contributions, and ongoing work.*
------------------------------------------------------------------
