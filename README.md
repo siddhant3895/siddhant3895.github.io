@@ -1,4 +1,4 @@
-# Siddhant — Personal Portfolio
+# Siddhant — Portfolio
 
 A personal portfolio showcasing my work across software engineering, open-source development, and data-driven applications.
 
